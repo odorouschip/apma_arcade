@@ -1,0 +1,6 @@
+renv/library/
+renv/staging/
+renv/python/
+.Rhistory
+.RData
+.Rproj.user
