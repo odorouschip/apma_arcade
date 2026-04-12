@@ -171,41 +171,75 @@ function initFourier(){
 
   function stopA(){if(af)cancelAnimationFrame(af);af=null;mode="draw";}
 
-  Shiny.addCustomMessageHandler("fourier_coeffs",function(data){
-    coeffs=data;mode="animate";time=0;sC=0;trace=[];
-    badge.textContent="Animating with "+Math.min(nTerms,coeffs.length)+" terms";
+  Shiny.addCustomMessageHandler("fourier_coeffs", function(data){
+    coeffs = data;
+    mode = "animate";
+    time = 0;
+    trace = [];
+    badge.textContent = "Animating with " + Math.min(nTerms, coeffs.length) + " terms";
     anim();
   });
 
   function anim(){
     ctx.clearRect(0,0,W,H);
+
     if(origP.length>1){
-      ctx.beginPath();ctx.moveTo(origP[0].x,origP[0].y);
-      for(var i=1;i<origP.length;i++)ctx.lineTo(origP[i].x,origP[i].y);
-      ctx.strokeStyle="rgba(255,255,255,.12)";ctx.lineWidth=1.5;ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(origP[0].x,origP[0].y);
+      for(var i=1;i<origP.length;i++) ctx.lineTo(origP[i].x,origP[i].y);
+      ctx.strokeStyle="rgba(255,255,255,.12)";
+      ctx.lineWidth=1.5;
+      ctx.stroke();
     }
+
     if(trace.length>1){
-      ctx.beginPath();ctx.moveTo(trace[0].x+W/2,trace[0].y+H/2);
-      for(var i=1;i<trace.length;i++)ctx.lineTo(trace[i].x+W/2,trace[i].y+H/2);
-      ctx.strokeStyle="#ffaa00";ctx.lineWidth=2.5;ctx.lineCap="round";ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(trace[0].x+W/2,trace[0].y+H/2);
+      for(var i=1;i<trace.length;i++) ctx.lineTo(trace[i].x+W/2,trace[i].y+H/2);
+      ctx.strokeStyle="#ffaa00";
+      ctx.lineWidth=2.5;
+      ctx.lineCap="round";
+      ctx.stroke();
     }
-    var n=Math.min(nTerms,coeffs.length),x=0,y=0;
+
+    var n = Math.min(nTerms, coeffs.length), x = 0, y = 0;
     for(var i=0;i<n;i++){
-      var c=coeffs[i],px=x,py=y;
-      var ang=c.freq*time+c.phase;
-      x+=c.amp*Math.cos(ang);y+=c.amp*Math.sin(ang);
-      ctx.beginPath();ctx.arc(px+W/2,py+H/2,c.amp,0,2*Math.PI);
-      ctx.strokeStyle="rgba(100,180,255,"+Math.max(.06,.35-i*.005)+")";
-      ctx.lineWidth=1;ctx.stroke();
-      ctx.beginPath();ctx.moveTo(px+W/2,py+H/2);ctx.lineTo(x+W/2,y+H/2);
-      ctx.strokeStyle="rgba(170,128,255,"+Math.max(.15,.7-i*.01)+")";
-      ctx.lineWidth=1.2;ctx.stroke();
+      var c = coeffs[i], px = x, py = y;
+      var ang = c.freq * time + c.phase;
+      x += c.amp * Math.cos(ang);
+      y += c.amp * Math.sin(ang);
+
+      ctx.beginPath();
+      ctx.arc(px+W/2, py+H/2, c.amp, 0, 2*Math.PI);
+      ctx.strokeStyle = "rgba(100,180,255," + Math.max(.06,.35-i*.005) + ")";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(px+W/2, py+H/2);
+      ctx.lineTo(x+W/2, y+H/2);
+      ctx.strokeStyle = "rgba(170,128,255," + Math.max(.15,.7-i*.01) + ")";
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
     }
-    ctx.beginPath();ctx.arc(x+W/2,y+H/2,3.5,0,2*Math.PI);ctx.fillStyle="#ff4488";ctx.fill();
-    trace.push({x:x,y:y});
-    time+=aSpeed*(2*Math.PI/totS);sC++;
-    if(sC>=totS){time=0;sC=0;trace=[];}
-    af=requestAnimationFrame(anim);
+
+    ctx.beginPath();
+    ctx.arc(x+W/2, y+H/2, 3.5, 0, 2*Math.PI);
+    ctx.fillStyle = "#ff4488";
+    ctx.fill();
+
+    trace.push({x:x, y:y});
+
+    var cycle = 2 * Math.PI;
+    var baseStep = cycle / totS;
+    time += aSpeed * baseStep;
+
+    if (time >= cycle) {
+      time -= cycle;
+      trace = [];
+    }
+
+    af = requestAnimationFrame(anim);
   }
 
   window.updateTerms=function(v){
