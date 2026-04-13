@@ -30,30 +30,38 @@ compute_fourier <- function(px, py, max_terms = 150) {
   )
 }
 
-# Game metadata — ASCII-safe icons (emojis rendered via HTML entities)
+# Game metadata — icon = topbar emoji (HTML entities); thumb = carousel image under www/
 games <- list(
   list(id = "monty_hall", title = "Monty Hall Problem", icon = "&#x1F6AA;",
+       thumb = "img/games/monty_hall.png",
        desc = "Should you switch doors? Play the famous probability puzzle.",
        color = "#e07a5f", tag = "Probability"),
   list(id = "fourier", title = "Fourier Drawing", icon = "&#x1F300;",
+       thumb = "img/games/fourier.png",
        desc = "Draw any shape and watch spinning circles recreate it.",
        color = "#3d85c6", tag = "Calculus"),
   list(id = "dating", title = "Dating Number", icon = "&#x1F498;",
+       thumb = "img/games/dating.png",
        desc = "How many should you date before committing? Optimal stopping!",
        color = "#c27ba0", tag = "Optimization"),
   list(id = "plinko", title = "Plinko", icon = "&#x1F4CC;",
+       thumb = "img/games/plinko.png",
        desc = "Drop balls through pegs and watch the bell curve emerge.",
        color = "#6aa84f", tag = "Statistics"),
   list(id = "buffon", title = "Buffon's Needle", icon = "&#x1F4CF;",
+       thumb = "img/games/buffon.png",
        desc = "Toss needles on lined paper to estimate pi!",
        color = "#e69138", tag = "Geometry"),
   list(id = "poker", title = "Poker Hands", icon = "&#x1F0CF;",
+       thumb = "img/games/poker.png",
        desc = "Deal hands and discover how rare each poker hand is.",
        color = "#674ea7", tag = "Combinatorics"),
   list(id = "blackjack", title = "Blackjack", icon = "&#x1F0A1;",
+       thumb = "img/games/blackjack.png",
        desc = "Hit or stand? Play 21 and learn basic strategy.",
        color = "#cc0000", tag = "Probability"),
   list(id = "roulette", title = "Roulette", icon = "&#x1F3B0;",
+       thumb = "img/games/roulette.png",
        desc = "Spin the wheel and learn why the house always wins.",
        color = "#45818e", tag = "Statistics")
 )
@@ -79,7 +87,9 @@ body{background:var(--bg);color:var(--text);font-family:"DM Sans",sans-serif;ove
 .carousel-track-offset{animation-delay:-20s;margin-left:164px}
 .carousel-item{flex-shrink:0;width:300px;border-radius:18px;overflow:hidden;cursor:pointer;transition:transform .3s,box-shadow .3s;box-shadow:0 4px 24px rgba(0,0,0,.08);background:#fff}
 .carousel-item:hover{transform:scale(1.07);box-shadow:0 12px 40px rgba(0,0,0,.18)}
-.carousel-img{height:210px;display:flex;align-items:center;justify-content:center;font-size:5.5rem}
+.carousel-img{height:210px;position:relative;overflow:hidden;background:var(--border)}
+.carousel-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,color-mix(in srgb,var(--img-tint) 35%,transparent));pointer-events:none;z-index:1}
+.carousel-thumb{width:100%;height:100%;object-fit:cover;display:block;position:relative;z-index:0}
 .carousel-label{background:#fff;padding:20px 22px 18px}
 .carousel-label-tag{font-size:.78rem;text-transform:uppercase;letter-spacing:1.2px;font-weight:700;margin-bottom:5px}
 .carousel-label-title{font-family:"DM Serif Display",serif;font-size:1.4rem;color:var(--text)}
@@ -138,7 +148,7 @@ css_games <- '
 .bet-cell.green-num{background:#27ae60;color:#fff;border-color:#1e8449}
 .bet-cell.selected{box-shadow:0 0 0 3px var(--accent);transform:scale(1.08)}
 .bet-cell.outside{background:var(--bg);grid-column:span 2;font-size:.72rem}
-@media(max-width:520px){.hero-title{font-size:1.8rem}.carousel-item{width:220px}.carousel-img{height:160px;font-size:3.5rem}.door{width:85px;height:120px}}
+@media(max-width:520px){.hero-title{font-size:1.8rem}.carousel-item{width:220px}.carousel-img{height:160px}.door{width:85px;height:120px}}
 '
 
 # ════════════════════════════════════════════════════════════════
@@ -404,8 +414,8 @@ server <- function(input, output, session) {
           div(class = "carousel-item",
               onclick = paste0("goToGame('", g$id, "')"),
               div(class = "carousel-img",
-                  style = paste0("background:", g$color, ";"),
-                  HTML(g$icon)),
+                  style = paste0("--img-tint:", g$color, ";"),
+                  tags$img(src = g$thumb, alt = g$title, class = "carousel-thumb")),
               div(class = "carousel-label",
                   div(class = "carousel-label-tag",
                       style = paste0("color:", g$color, ";"), g$tag),
