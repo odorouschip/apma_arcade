@@ -67,10 +67,10 @@ css_base <- '
 :root{--bg:#faf7f2;--bg-card:#ffffff;--text:#2d2a26;--text-sub:#7a756d;--border:#e8e2d9;--accent:#d4643b;--radius:14px}
 body{background:var(--bg);color:var(--text);font-family:"DM Sans",sans-serif}
 .container-fluid{padding:0!important}
-.hero{text-align:center;padding:56px 24px 14px}
-.hero-title{font-family:"DM Serif Display",serif;font-size:3.2rem;letter-spacing:-0.5px;margin-bottom:8px}
-.hero-sub{font-size:1.25rem;color:var(--text-sub);font-weight:300;max-width:600px;margin:0 auto;line-height:1.6}
-.hero-badge{display:inline-block;margin-top:14px;background:var(--accent);color:#fff;font-size:.92rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:7px 20px;border-radius:20px}
+.hero{text-align:left;padding:60px 48px 18px;max-width:1200px}
+.hero-title{font-family:"DM Serif Display",serif;font-size:4.2rem;letter-spacing:-1px;margin-bottom:10px}
+.hero-sub{font-size:1.3rem;color:var(--text-sub);font-weight:300;max-width:600px;line-height:1.6}
+.hero-badge{display:inline-block;margin-top:16px;background:var(--accent);color:#fff;font-size:.92rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:7px 20px;border-radius:20px}
 .carousel-section{overflow:hidden;padding:24px 0 80px;position:relative}
 .carousel-section::before,.carousel-section::after{content:"";position:absolute;top:0;bottom:0;width:160px;z-index:2;pointer-events:none}
 .carousel-section::before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
