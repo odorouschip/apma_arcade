@@ -76,8 +76,8 @@ body{background:var(--bg);color:var(--text);font-family:"DM Sans",sans-serif}
 .carousel-section::before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
 .carousel-section::after{right:0;background:linear-gradient(270deg,var(--bg),transparent)}
 .carousel-track-wrapper{transform:rotate(-4deg);margin:0 -100px}
-.carousel-track{display:flex;gap:28px;width:max-content;padding:30px 0;animation:carousel-scroll 45s linear infinite}
-.carousel-track:hover{animation-play-state:paused}
+.carousel-track{display:flex;gap:28px;width:max-content;padding:18px 0;animation:carousel-scroll 40s linear infinite}
+.carousel-track-offset{animation-delay:-20s;margin-left:164px}
 .carousel-item{flex-shrink:0;width:300px;border-radius:18px;overflow:hidden;cursor:pointer;transition:transform .3s,box-shadow .3s;box-shadow:0 4px 24px rgba(0,0,0,.08);background:#fff}
 .carousel-item:hover{transform:scale(1.07);box-shadow:0 12px 40px rgba(0,0,0,.18)}
 .carousel-img{height:210px;display:flex;align-items:center;justify-content:center;font-size:5.5rem}
@@ -400,19 +400,22 @@ server <- function(input, output, session) {
   output$main_view <- renderUI({
     page <- current_page()
     if (page == "home") {
-      items <- lapply(games, function(g) {
-        div(class = "carousel-item",
-            onclick = paste0("goToGame('", g$id, "')"),
-            div(class = "carousel-img",
-                style = paste0("background:", g$color, ";"),
-                HTML(g$icon)),
-            div(class = "carousel-label",
-                div(class = "carousel-label-tag",
-                    style = paste0("color:", g$color, ";"), g$tag),
-                div(class = "carousel-label-title", g$title),
-                div(class = "carousel-label-desc", g$desc))
-        )
-      })
+      make_items <- function(game_list) {
+        lapply(game_list, function(g) {
+          div(class = "carousel-item",
+              onclick = paste0("goToGame('", g$id, "')"),
+              div(class = "carousel-img",
+                  style = paste0("background:", g$color, ";"),
+                  HTML(g$icon)),
+              div(class = "carousel-label",
+                  div(class = "carousel-label-tag",
+                      style = paste0("color:", g$color, ";"), g$tag),
+                  div(class = "carousel-label-title", g$title),
+                  div(class = "carousel-label-desc", g$desc))
+          )
+        })
+      }
+      all_items <- make_items(games)
       return(tagList(
         div(class = "hero",
             div(class = "hero-title", "APMA Math Arcade"),
@@ -422,7 +425,8 @@ server <- function(input, output, session) {
         ),
         div(class = "carousel-section",
             div(class = "carousel-track-wrapper",
-                div(class = "carousel-track", items, items)))
+                div(class = "carousel-track", all_items, all_items),
+                div(class = "carousel-track carousel-track-offset", all_items, all_items)))
       ))
     }
     
