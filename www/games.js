@@ -419,16 +419,23 @@ function initBuffon(){
   function render(){ctx.clearRect(0,0,W,H);drawLines();drawN();upd();}
 
   function dropOne(){
-    var cx=Math.random()*W,cy=Math.random()*H;
-    var ang=Math.random()*Math.PI;
-    var dx=L/2*Math.cos(ang),dy=L/2*Math.sin(ang);
-    var x1=cx-dx,y1=cy-dy,x2=cx+dx,y2=cy+dy;
-    var hit=false;
-    for(var ly=D;ly<H;ly+=D){
-      if((y1<=ly&&y2>=ly)||(y2<=ly&&y1>=ly)){hit=true;break;}
+    var cx = Math.random() * W;
+    var cy = L/2 + Math.random() * (H - L);
+    var ang = Math.random() * Math.PI;
+    var dx = L/2 * Math.cos(ang), dy = L/2 * Math.sin(ang);
+    var x1 = cx - dx, y1 = cy - dy, x2 = cx + dx, y2 = cy + dy;
+    var hit = false;
+  
+    for(var ly = D; ly < H; ly += D){
+      if((y1 <= ly && y2 >= ly) || (y2 <= ly && y1 >= ly)){
+        hit = true;
+        break;
+      }
     }
+  
     needles.push({x1:x1,y1:y1,x2:x2,y2:y2,hit:hit});
-    total++;if(hit)hits++;
+    total++;
+    if(hit) hits++;
   }
 
   function upd(){

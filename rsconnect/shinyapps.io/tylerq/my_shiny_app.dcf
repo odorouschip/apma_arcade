@@ -1,0 +1,10 @@
+name: my_shiny_app
+title:
+username: tylerq
+account: tylerq
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 17116437
+bundleId: 11841419
+url: https://tylerq.shinyapps.io/my_shiny_app/
+version: 1
